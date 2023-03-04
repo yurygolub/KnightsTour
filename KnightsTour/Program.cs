@@ -7,18 +7,24 @@ namespace KnightsTour
     {
         public static void Main()
         {
-            int rows = 6, columns = 6;
-            int startRow = 3, startCol = 2;
+            int rows = 5, columns = 6;
+            int startRow = 2, startCol = 3;
 
             Stopwatch stopwatch = Stopwatch.StartNew();
-            (int row, int column)[] result = new Solver(rows, columns).Solve(startRow, startCol);
+            var solutions = new Solver(rows, columns).Solve(startRow, startCol);
             stopwatch.Stop();
 
-            foreach (var (row, column) in result)
+            foreach (var solution in solutions)
             {
-                Console.WriteLine($"row: {row}\tcolumn: {column}");
+                foreach (var (row, column) in solution)
+                {
+                    Console.WriteLine($"row: {row}\tcolumn: {column}");
+                }
+
+                Console.WriteLine();
             }
 
+            Console.WriteLine($"Solutions count: {solutions.Count}");
             Console.WriteLine($"ElapsedMilliseconds: {stopwatch.ElapsedMilliseconds}");
         }
     }

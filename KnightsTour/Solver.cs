@@ -24,7 +24,7 @@ namespace KnightsTour
             this.columns = columns;
         }
 
-        public (int row, int column)[] Solve(int startRow, int startCol)
+        public List<(int row, int column)[]> Solve(int startRow, int startCol)
         {
             if (startRow < 0 || startRow >= this.rows)
             {
@@ -36,16 +36,26 @@ namespace KnightsTour
                 throw new ArgumentOutOfRangeException(nameof(startCol));
             }
 
-            var node = Solve(new Node(startRow, startCol, null));
+            var solutions = new List<Node>();
 
-            Stack<(int row, int column)> result = new Stack<(int row, int column)>();
-            while (node is not null)
+            Solve(new Node(startRow, startCol, null));
+
+            List<(int row, int column)[]> result = new ();
+            foreach (var solution in solutions)
             {
-                result.Push((node.Row, node.Column));
-                node = node.Parent;
+                Node temp = solution;
+
+                Stack<(int row, int column)> stack = new Stack<(int row, int column)>();
+                while (temp is not null)
+                {
+                    stack.Push((temp.Row, temp.Column));
+                    temp = temp.Parent;
+                }
+
+                result.Add(stack.ToArray());
             }
 
-            return result.ToArray();
+            return result;
 
             Node Solve(Node current)
             {
@@ -55,92 +65,61 @@ namespace KnightsTour
                 nextCol = current.Column - 1;
                 if (nextRow >= 0 && nextCol >= 0 && Validate(nextRow, nextCol, current))
                 {
-                    Node result = Solve(new Node(nextRow, nextCol, current));
-                    if (result is not null)
-                    {
-                        return result;
-                    }
+                    Solve(new Node(nextRow, nextCol, current));
                 }
 
                 nextRow = current.Row - 2;
                 nextCol = current.Column + 1;
                 if (nextRow >= 0 && nextCol < this.columns && Validate(nextRow, nextCol, current))
                 {
-                    Node result = Solve(new Node(nextRow, nextCol, current));
-                    if (result is not null)
-                    {
-                        return result;
-                    }
+                    Solve(new Node(nextRow, nextCol, current));
                 }
 
                 nextRow = current.Row - 1;
                 nextCol = current.Column + 2;
                 if (nextRow >= 0 && nextCol < this.columns && Validate(nextRow, nextCol, current))
                 {
-                    Node result = Solve(new Node(nextRow, nextCol, current));
-                    if (result is not null)
-                    {
-                        return result;
-                    }
+                    Solve(new Node(nextRow, nextCol, current));
                 }
 
                 nextRow = current.Row + 1;
                 nextCol = current.Column + 2;
                 if (nextRow < this.rows && nextCol < this.columns && Validate(nextRow, nextCol, current))
                 {
-                    Node result = Solve(new Node(nextRow, nextCol, current));
-                    if (result is not null)
-                    {
-                        return result;
-                    }
+                    Solve(new Node(nextRow, nextCol, current));
                 }
 
                 nextRow = current.Row + 2;
                 nextCol = current.Column + 1;
                 if (nextRow < this.rows && nextCol < this.columns && Validate(nextRow, nextCol, current))
                 {
-                    Node result = Solve(new Node(nextRow, nextCol, current));
-                    if (result is not null)
-                    {
-                        return result;
-                    }
+                    Solve(new Node(nextRow, nextCol, current));
                 }
 
                 nextRow = current.Row + 2;
                 nextCol = current.Column - 1;
                 if (nextRow < this.rows && nextCol >= 0 && Validate(nextRow, nextCol, current))
                 {
-                    Node result = Solve(new Node(nextRow, nextCol, current));
-                    if (result is not null)
-                    {
-                        return result;
-                    }
+                    Solve(new Node(nextRow, nextCol, current));
                 }
 
                 nextRow = current.Row - 1;
                 nextCol = current.Column - 2;
                 if (nextRow >= 0 && nextCol >= 0 && Validate(nextRow, nextCol, current))
                 {
-                    Node result = Solve(new Node(nextRow, nextCol, current));
-                    if (result is not null)
-                    {
-                        return result;
-                    }
+                    Solve(new Node(nextRow, nextCol, current));
                 }
 
                 nextRow = current.Row + 1;
                 nextCol = current.Column - 2;
                 if (nextRow < this.rows && nextCol >= 0 && Validate(nextRow, nextCol, current))
                 {
-                    Node result = Solve(new Node(nextRow, nextCol, current));
-                    if (result is not null)
-                    {
-                        return result;
-                    }
+                    Solve(new Node(nextRow, nextCol, current));
                 }
 
                 if (IsSolved(current))
                 {
+                    solutions.Add(current);
                     return current;
                 }
                 else
